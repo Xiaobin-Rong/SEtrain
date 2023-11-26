@@ -1,0 +1,11 @@
+path:
+  exp_folder: ${network.root}/${network.exp_name}/${network.cpt_name}/enhanced # where enhanced speech store
+
+network:
+  root: /data/ssd0/xiaobin.rong/project_se/DNS3
+  exp_name: exp_dpcrn_2023-08-02-11h32m
+  cpt_name: model_0082
+  checkpoint: ${network.exp_path}/checkpoints/${network.cpt_name}.tar
+  exp_path: ${network.root}/${network.exp_name}
+  cfg_toml: ${network.exp_path}/config.toml
+

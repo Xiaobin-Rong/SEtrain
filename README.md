@@ -6,8 +6,8 @@ For training:
 * `config.toml`: Specifies the training configurations.
 * `datasets.py`: Provides the dataset class for the dataloader.
 * `distributed_utils.py`: Assists with Distributed Data Parallel (DDP) training.
-* `model.py`: Defines the model.
 * `loss_factory.py`: Provides various useful loss functions in SE.
+* `model.py`: Defines the model.
 * `train_sg.py`: Conducts the training process for a single GPU machine.
 * `train.py`: Conducts the training process for multiple GPUs.
 * `trainer_sg.py`: Encapsulates various functions during training for a single GPU machine.

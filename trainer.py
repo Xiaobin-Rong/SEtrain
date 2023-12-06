@@ -104,9 +104,9 @@ class Trainer:
 
     def _train_epoch(self, epoch):
         total_loss = 0
-        self.train_dataloader = tqdm(self.train_dataloader, ncols=110)
+        train_bar = tqdm(self.train_dataloader, ncols=120)
 
-        for step, (mixture, target) in enumerate(self.train_dataloader, 1):
+        for step, (mixture, target) in enumerate(train_bar, 1):
             mixture = mixture.to(self.device)
             target = target.to(self.device)  
 
@@ -116,10 +116,10 @@ class Trainer:
             loss = reduce_value(loss)
             total_loss += loss.item()
 
-            self.train_dataloader.desc = '   train[{}/{}][{}]'.format(
+            train_bar.desc = '   train[{}/{}][{}]'.format(
                 epoch, self.epochs + self.start_epoch-1, datetime.now().strftime("%Y-%m-%d-%H:%M"))
 
-            self.train_dataloader.postfix = 'loss={:.3f}'.format(total_loss / step)
+            train_bar.postfix = 'train_loss={:.3f}'.format(total_loss / step)
 
             self.optimizer.zero_grad()
             loss.backward()
@@ -139,7 +139,7 @@ class Trainer:
         total_loss = 0
         total_pesq_score = 0
 
-        self.validation_dataloader = tqdm(self.validation_dataloader, ncols=132)
+        validation_bar = tqdm(self.validation_dataloader, ncols=132)
         for step, (mixture, target) in enumerate(self.validation_dataloader, 1):
             mixture = mixture.to(self.device)
             target = target.to(self.device)  
@@ -150,8 +150,8 @@ class Trainer:
             loss = reduce_value(loss)
             total_loss += loss.item()
 
-            enhanced = torch.istft(esti_tagt[..., 0] + 1j*esti_tagt[..., 1], **self.config['FFT'], torch.hann_window(self.config['FFT']['win_length']).pow(0.5).to(self.device))
-            clean = torch.istft(target[..., 0] + 1j*target[..., 1], **self.config['FFT'], torch.hann_window(self.config['FFT']['win_length']).pow(0.5).to(self.device))
+            enhanced = torch.istft(esti_tagt[..., 0] + 1j*esti_tagt[..., 1], **self.config['FFT'], window=torch.hann_window(self.config['FFT']['win_length']).pow(0.5).to(self.device))
+            clean = torch.istft(target[..., 0] + 1j*target[..., 1], **self.config['FFT'], window=torch.hann_window(self.config['FFT']['win_length']).pow(0.5).to(self.device))
 
             enhanced = enhanced.squeeze().cpu().numpy()
             clean = clean.squeeze().cpu().numpy()
@@ -168,10 +168,10 @@ class Trainer:
                                     '{}_clean.wav'.format(step)),
                                     clean, 16000)
                 
-            self.validation_dataloader.desc = 'validate[{}/{}][{}]'.format(
+            validation_bar.desc = 'validate[{}/{}][{}]'.format(
                 epoch, self.epochs + self.start_epoch-1, datetime.now().strftime("%Y-%m-%d-%H:%M"))
 
-            self.validation_dataloader.postfix = 'loss={:.2f}, pesq={:.4f}'.format(
+            validation_bar.postfix = 'valid_loss={:.3f}, pesq={:.4f}'.format(
                 total_loss / step, total_pesq_score / step)
 
 

@@ -38,4 +38,4 @@ The code is originally intended for Linux systems, and if you attempt to adapt i
 Please keep these considerations in mind when working with the code on the Windows platform.
 
 ## Acknowledgement
-This code template heavily borrows from the excellent [Sheffield_Clarity_CEC1_Entry](https://github.com/TuZehai/Sheffield_Clarity_CEC1_Entry) reposity in many aspects.
+This code template heavily borrows from the excellent [Sheffield_Clarity_CEC1_Entry](https://github.com/TuZehai/Sheffield_Clarity_CEC1_Entry) repository in many aspects.

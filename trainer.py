@@ -30,6 +30,7 @@ class Trainer:
         self.validation_dataloader = validation_dataloader
 
         self.train_sampler = train_sampler
+        self.args = args
         self.rank = args.rank
         self.device = args.device
 
@@ -140,7 +141,7 @@ class Trainer:
         total_pesq_score = 0
 
         validation_bar = tqdm(self.validation_dataloader, ncols=132)
-        for step, (mixture, target) in enumerate(self.validation_dataloader, 1):
+        for step, (mixture, target) in enumerate(validation_bar, 1):
             mixture = mixture.to(self.device)
             target = target.to(self.device)  
             

@@ -36,10 +36,7 @@ When starting a new SE project, you should follow these steps:
 ## Note
 1. The code is originally intended for Linux systems, and if you attempt to adapt it to the Windows platform, you may encounter certain issues:
 * Incompatibility of paths: The file paths used in Linux systems may not be compatible with the file paths in Windows.
-
 * Challenges in installing the pesq package: The process of installing the pesq package on Windows may not be straightforward and may require additional steps or configurations.
-
-Please keep these considerations in mind when working with the code on the Windows platform.
 
 2. The code is merely provided as a template, and some negligible details are not included in the repository, such as the `INFO.csv` in  `datasets.py` and `DNSMOS` in the `infer_folder`/`infer_loader.py`.
 

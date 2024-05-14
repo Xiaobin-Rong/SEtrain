@@ -2,7 +2,6 @@
 conduct evaluation on a folder of WAV files, with computing SISNR, PESQ, ESTOI, and DNSMOS.
 """
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="0" 
 import toml
 import torch
 from tqdm import tqdm

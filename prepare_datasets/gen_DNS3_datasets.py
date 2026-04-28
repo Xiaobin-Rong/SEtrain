@@ -97,8 +97,8 @@ if __name__ == "__main__":
         
         if len(rir.shape)>1:
             rir = rir[:, 0]
-        max_index = np.argmax(np.abs(rir))
-        rir = rir[max_index:]
+        max_index = np.argmax(np.abs(rir)) # find index where rir is max, response from here
+        rir = rir[max_index:] 
         rir_e = rir[:min(int(100 * 16000 / 1000), len(rir))]  # rir_e: early rir, 选取前100ms的rir，用来生成低混响的干净语音 
         
         rev_clean = add_pyreverb(clean, rir)   # reverbrant clean speech

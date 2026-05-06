@@ -61,6 +61,6 @@ trainer:
   epochs: 200
   save_checkpoint_interval: 1
   clip_grad_norm_value: 3.0
-  exp_path: /data/ssd0/xiaobin.rong/study_se/DNS3/exp_gtcrn
+  exp_path: /home/sch/code/audio/SEtrain/out/exp_gtcrn
   resume: False
   resume_datetime: 2024-12-31-14h28m

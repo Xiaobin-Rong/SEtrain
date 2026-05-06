@@ -6,8 +6,8 @@ from torch.utils import data
 import numpy as np
 import random
 
-NOISY_DATABASE_TRAIN = '/data/ssd0/xiaobin.rong/Datasets/DNS3/train_noisy'
-NOISY_DATABASE_VALID = '/data/ssd0/xiaobin.rong/Datasets/DNS3/dev_noisy'
+NOISY_DATABASE_TRAIN = '/home/sch/code/audio/data/train_noisy'
+NOISY_DATABASE_VALID = '/home/sch/code/audio/data/dev_noisy'
 
 class DNS3Dataset(torch.utils.data.Dataset):
     def __init__(

@@ -1,0 +1,9 @@
+test_dataset: 
+  noisy_dir: /home/test/code/audio/data/test_noisy/
+
+network:
+  exp_path: /home/test/code/audio/SEtrain/out/exp_gtcrn_2026-05-08-19h21m
+  config: ${network.exp_path}/config.yaml
+  ckpt_name: model_149
+  checkpoint: ${network.exp_path}/checkpoints/${network.ckpt_name}.tar
+  output_folder: ${network.exp_path}/${network.ckpt_name}/test_output

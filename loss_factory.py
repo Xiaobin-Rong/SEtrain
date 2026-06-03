@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+import torch.nn.functional as F
 
 class HybridLoss(nn.Module):
     def __init__(
@@ -100,12 +100,62 @@ class MultiResolutionSTFTLoss(nn.Module):
         loss /= len(self.stft_losses)
         return loss
     
+class TimeFreqCombinedLoss(nn.Module):
+    def __init__(self, n_fft=512, hop_len=256, win_len=512):
+        """
+        适用于幅度谱预测型 CRN 的时频联合损失函数
+        """
+        super().__init__()
+        self.n_fft = n_fft
+        self.hop_len = hop_len
+        self.win_len = win_len
 
+    def forward(self, enhanced_wav, clean_wav):
+        """
+        参数:
+        - enhanced_wav: 模型输出的时域信号，形状为 (B, L)
+        - clean_wav: 数据集中的纯净时域信号，形状为 (B, L)
+        """
+        device = enhanced_wav.device
+        
+        # -----------------------------------------------------------------
+        # 1. 时域损失 (Time-Domain Loss)
+        # -----------------------------------------------------------------
+        # 使用 L1 Loss (MAE) 相比 MSE 对异常值更鲁棒，能更好地抑制背景白噪声
+        time_loss = F.l1_loss(enhanced_wav, clean_wav, reduction='mean')
+
+        # -----------------------------------------------------------------
+        # 2. 频域损失 (Frequency-Domain Loss)
+        # -----------------------------------------------------------------
+        stft_kwargs = {
+            'n_fft': self.n_fft,
+            'hop_length': self.hop_len,
+            'win_length': self.win_len,
+            'window': torch.hann_window(self.win_len).to(device),
+            'onesided': True,
+            'return_complex': True
+        }
+        
+        stft_enh = torch.stft(enhanced_wav, **stft_kwargs)
+        stft_cle = torch.stft(clean_wav, **stft_kwargs)
+        mag_enh = torch.abs(stft_enh)
+        mag_cle = torch.abs(stft_cle)
+
+        # 频域幅度谱 L1 损耗：强迫模型精准恢复谐波与共振峰结构
+        freq_loss = F.l1_loss(mag_enh, mag_cle, reduction='mean')
+
+        # -----------------------------------------------------------------
+        # 3. 联合总损耗 (加上权重系数)
+        # -----------------------------------------------------------------
+        # 通常时域与频域的量级在 1:1 左右，直接相加即可获得极佳的收敛效果
+        total_loss = time_loss + freq_loss
+        
+        return total_loss
 
 if __name__=='__main__':
-    a = torch.randn(2, 10000)
-    b = torch.randn(2, 10000)
+    a = torch.randn(2, 16000)
+    b = torch.randn(2, 16000)
 
-    loss_func = HybridLoss()
+    loss_func = TimeFreqCombinedLoss()
     loss = loss_func(a, b)
     print(loss)
